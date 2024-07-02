@@ -131,7 +131,7 @@ const listUsers = joi.object({
 
 const listUsersValidation = async (req, res, next) => {
 const payload = {
-	ProjectID: req.body.loginUser,
+	ProjectID: req.body.ProjectID,
 };
 
 const { error } = listUsers.validate(payload);

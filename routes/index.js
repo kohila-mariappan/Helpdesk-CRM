@@ -8,7 +8,7 @@ const moduleRoutes = require('./helpdeskRoutes/modules')
 const commentRoutes = require('./helpdeskRoutes/comments')
 const uploadRouts = require('./helpdeskRoutes/upload')
 const logoRoutes = require('./adminRoutes/logo')
-const adminRoutes = require('./adminRoutes/users')
+const adminRoutes = require('./adminRoutes/admin')
 
 
 app.use('/user', userRoutes)

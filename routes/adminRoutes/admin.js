@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const admin = require('../../controllers/adminController/admin')
-const validator = require('../validator/adminValidator')
+const validator = require('../../validator/adminValidator')
 
 
 router.post('/module/create',[validator.ModuleValidation],admin.createModule)

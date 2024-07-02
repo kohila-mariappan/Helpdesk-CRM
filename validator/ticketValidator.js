@@ -61,7 +61,7 @@ const projectIdValidation = async (req, res, next) => {
 	}
 };
 const ticvalidation = joi.object({
-    TicketID: joi.string().regex(/[A-Z]{3}-[0-9]{4}-[0-9]{4}/).required(),
+    TicketID: joi.string().regex(/[A-Z]-[0-9]{4}-[0-9]{4}/).required(),
 });
 const ticketIdValidation = async (req, res, next) => {
 	const payload = {
