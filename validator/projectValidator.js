@@ -40,7 +40,6 @@ const projectCreation = joi.object({
 	Description:joi.string().required(),
 	loginUser: joi.number().integer().required(),
 	Status: joi.number().integer().required(),
-	UserID: joi.number().integer().required()
 });
 
 const projectCreationValidation = async (req, res, next) => {
@@ -50,7 +49,6 @@ const projectCreationValidation = async (req, res, next) => {
 		Description: req.body.Description,
 		loginUser: req.body.loginUser,
 		Status: req.body.Status,
-        UserID: req.body.UserID
 	};
 
 	const { error } = projectCreation.validate(payload);
