@@ -338,18 +338,6 @@ let userCreation = async(req,res) =>{
   }
 }
 
-// let findUSer = async(email)=>{
-//   try{
-//     let data = await db.sequelize.query("Exec helpdesk.findUser @email = '"+ email +"' ", {
-//       type: Sequelize.QueryTypes.RAW
-//      })
-//      console.log('find user data',data)
-//      return data[0]
-//   }catch(err){
-//     console.log("Error",err)
-//     return err
-//   }
-// }
 
 let newUser = async (UserName,Password,FullName,Email,RoleID,loginUser) =>{
   try{
@@ -365,18 +353,7 @@ let newUser = async (UserName,Password,FullName,Email,RoleID,loginUser) =>{
   }
 }
 
-// let  getNewUserId = async()=>{
-//   try{
-//     let data = await db.sequelize.query("Exec helpdesk.newUserId ", {
-//       type: Sequelize.QueryTypes.RAW
-//      })
-//      console.log('data',data)
-//      return data[0]
-//   }catch(err){
-//     console.log("Error",err)
-//     return err
-//   }
-// }
+
 
 let RoleCreation = async (req,res) =>{
   try{

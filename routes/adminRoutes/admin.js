@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const admin = require('../../controllers/adminController/admin')
 const validator = require('../../validator/adminValidator')
+const {projectIdValidation} = require('../../validator/projectValidator')
 
 
 router.post('/module/create',[validator.ModuleValidation],admin.createModule)
@@ -19,7 +20,7 @@ router.get('/excel/download',admin.exportExcel)
 
 
 
-router.get('/dashboard',admin.dasboard)
+router.post('/dashboard',[projectIdValidation],admin.dasboard)
 
 
 

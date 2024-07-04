@@ -11,99 +11,21 @@ const request = require('request');
 const leadCreation  = async(req,res) =>{
     try{
         let {FirstName,LastName,Email,Phone,ProductId,LeadLocation,IPAddress,Source,ReferredBy,Notes} = req.body
-        // let findLead = await findOldLead(Email)
-        // console.log('findLead',findLead,findLead.length)
-        //console.log('Source',Source)
-        // if((Source === 'NULL') || (Source === '') || (Source === 'null')){
-        //     Source = 1 
-        //     console.log('null/empty') 
-        // }else{
-        //     let findSource = await findSourceName(Source)
-        //     if(findSource.length>0){
-        //         Source = findSource[0].SourceId
-        //     }else{
-        //     let newSource = await insertNewSource(Source)
-        //     if(newSource.length>0){
-        //         let data = await getSourceId()
-        //         Source = data[0].SourceId
-        //     }else{
-        //         let msg = 'Failed to add New Source'
-        //         statusCode.successResponse(res,msg)
-        //     }
-        //     }       
-        // }
-        // let source = await insertNewSource(Source)
-        // console.log('Source',source[0].sourceId)
-        // let SourceId = source[0].sourceId
- 
-        // if(findLead.length == 0){
         let creationData = await newLead(FirstName,LastName,Email,Phone,ProductId,LeadLocation,IPAddress,Source,ReferredBy,Notes)
          if(Array.isArray(creationData)){
-        //     let getId = await getnewId()
-        //     if(getId.length>0){
-        //         let emailId = getId[0].Email
-                let msg = `Lead-${Email}-Created Successfully`
-                statusCode.successResponseForCreation(res,msg)
-        //         let LeadId = getId[0].LeadId
-                //let LeadCreationLog = await ActivityLog(LeadId,msg)
-                let sendMail = await sendEmail(Email)
-                console.log('mail',sendMail)
-            }else{
-                let msg =  `Lead Creation Failed.${creationData}`
-                statusCode.successResponse(res,msg)
-            }           
-
-        // }else{
-        //     let msg = 'Lead Creation Failed'
-        //     statusCode.successResponse(res,msg)
-        // }
-        // }else{
-        //     console.log('data',findLead[0].Email)
-
-        //     let msg = findLead[0].Email +"-" +'Lead already Exist!'
-        //     statusCode.successResponse(res,msg)
-        // }       
-
+          let msg = `Lead-${Email}-Created Successfully`
+          statusCode.successResponseForCreation(res,msg)
+          await sendEmail(Email)
+        }else{
+          let msg =  `Lead Creation Failed.${creationData}`
+          statusCode.successResponse(res,msg)
+        }
     }catch(err){
         console.log("Error",err)
         let msg = 'Lead creation Failed.' + "" +err
         statusCode.errorResponse(res,msg)
     }
 }
-
-// let findSourceName = async (Source) =>{
-//     try{
-//         console.log('enter find source')
-//         let data = await db.sequelize.query("EXEC findSourceName @src = '"+Source+"' ",{
-//             type: Sequelize.QueryTypes.RAW})
-//             return data[0]
-//     }catch(err){
-//         console.log("DB Error",err)
-//         return err
-//     }
-
-// }
-// let insertNewSource = async (Source) =>{
-//     try{
-//         let data = await db.sequelize.query("EXEC insertSource @source = '"+Source+"' ",{
-//             type: Sequelize.QueryTypes.RAW})
-//             return data[0]
-//     }catch(err){
-//         console.log("DB Error",err.message)
-//         return err.message
-//     }
-// }
-
-// let getSourceId  = async () =>{
-//     try{
-//         let data = await db.sequelize.query("EXEC getSourceId",{
-//             type: Sequelize.QueryTypes.RAW})
-//             return data[0]
-//     }catch(err){
-//         console.log("DB Error",err)
-//         return err
-//     }
-// }
 
 let findOldLead = async(Email) =>{
     try{
@@ -128,17 +50,6 @@ let newLead = async (FirstName,LastName,Email,Phone,ProductId,LeadLocation,IPAdd
         return err.message
     }
 }
-
-// let getnewId = async()=>{
-//     try{
-//         let data = await db.sequelize.query("EXEC getLeadId",{
-//             type: Sequelize.QueryTypes.RAW})
-//             return data[0]
-//     }catch(err){
-//         console.log("db-error",err)
-//         return err;
-//     }
-// }
 
 let sendEmail = async(emailId) =>{
     try{
@@ -346,11 +257,7 @@ const AssignToUser = async(req,res) =>{
       }else{
         let msg = `User Updation Failed.${update}`
         statusCode.successResponse(res,msg)
-      }
-        // let userName = await updatedUserName(UserId)
-        // console.log('userName',userName)
-        // let msg = `Lead Assigned To User-${userName[0].FullName} Successfully`
-        // let log = await ActivityLog(LeadId,msg)      
+      }    
      }catch(err){
       console.log("error",err)
       let msg = `Failed To Assigned User in the lead.${err}`
@@ -370,103 +277,25 @@ const AssignToUser = async(req,res) =>{
       return err.message
     }  
   }
- 
-
-//   let updatedUserName = async(UserId) =>{
-//     try{
-//       let data = await db.sequelize.query("Exec updateUserName @usr = '"+UserId+"'", {
-//         type: Sequelize.QueryTypes.RAW
-//        })
-//        return data[0]
-//     }catch(err){
-//       console.log('Error',err)
-//       return err
-//     }
-  
-//   }
-
 
   let UpdateLeadDetails = async(req,res) =>{
     try{
         let{LeadId,StatusId,InteractionType,Notes} = req.body
         let data = await updateLeadStatus(LeadId,StatusId,InteractionType,Notes)
         if(Array.isArray(data)){
-            //let data = await leadStatus(StatusId)
             console.log('data',data)
-            //if(data.length>0){
-                let msg = `Lead Status and Interactions Updated Successfully`
-                //let statusLog = await ActivityLog(LeadId,msg)
-                //let findLead = await FindLeadInteraction(LeadId)
-                // console.log('findLead',findLead,findLead.length)
-                // if(findLead.length>0){
-                //     let interactiondata = await updateInteractionData(LeadId,InteractionType,Notes)
-                //     // let logmsg = "Interaction details Updated Successfully"
-                //     // let interactiondataLog = await InteractionLog(LeadId,InteractionId,logmsg)
-                //     let msg = 'Lead Details Updated Successfully'
-                //     statusCode.successResponseForCreation(res,msg)
-    
-                // }else{
-                // let interactiondata = await InsertInteractionData(LeadId,InteractionType,Notes)
-                // let getId = await getInteractionId()
-                // console.log('getId',getId,getId.length)
-                // if(getId.length>0){
-                //     let InteractionId= getId[0].InteractionId
-                //     let logmsg = `Interaction Type : ${getId[0].InteractionType} and Notes: ${getId[0].Notes}  Updated Successfully`
-                //     let interactiondataLog = await InteractionLog(LeadId,InteractionId,logmsg)
-                //     let msg = 'Lead Updated Successfully'
-                //     statusCode.successResponseForCreation(res,msg)
-                // }else{
-                //     let msg = "Lead Interaction Updated Failed"
-                //     statusCode.successResponse(res,msg)
-                // }
-            //}
-
-            //     }else{
-            //     let msg = 'Invalid Status'
-            //     statusCode.successResponse(res,msg)
-            // }     
+            let msg = `Lead Status and Interactions Updated Successfully`
             statusCode.successResponseForCreation(res,msg)  
         }else{
             let msg = `Lead Status Updation Failed.${data}`
             statusCode.successResponse(res,msg)
         }
-
     }catch(err){
         console.log("Error",err)
         let msg = `Lead Status Updation Failed.${err}`
         statusCode.errorResponse(res,msg)
     }
   }
-
-//   let FindLeadInteraction = async (LeadId) =>{
-//     try{
-//         console.log('data',LeadId)
-//         let data = await db.sequelize.query("exec FindLeadInteraction @lead='"+LeadId+"'",{ 
-//           type: Sequelize.QueryTypes.RAW
-//           })
-//          console.log('log',data)
-//          return data[0]
-    
-//       }catch(err){
-//           console.log("DB Error",err)
-//           return err
-//       }
-//   }
-
-//   let leadStatus = async (StatusId) =>{
-//     try{
-//         let data = await db.sequelize.query("exec updatedStatus @stat='"+StatusId+"'",{ 
-//           type: Sequelize.QueryTypes.RAW
-//           })
-//          console.log('log',data)
-//          return data[0]
-    
-//       }catch(err){
-//           console.log("DB Error",err)
-//           return err
-//       }
-
-//   }
 
   let updateLeadStatus = async (LeadId,StatusId,InteractionType,Notes) =>{
     try{
@@ -482,80 +311,6 @@ const AssignToUser = async(req,res) =>{
       }
   }
 
-//   let InsertInteractionData = async(LeadId,InteractionType,Notes) =>{
-//     try{
-//         console.log('data',LeadId,InteractionType,Notes)
-//         let data = await db.sequelize.query("exec insertInteraction @lead='"+LeadId+"',@type='"+InteractionType+"',@note='"+Notes+"'",{ 
-//           type: Sequelize.QueryTypes.RAW
-//           })
-//          console.log('log',data)
-//          return data
-    
-//       }catch(err){
-//           console.log("DB Error",err)
-//           return err
-//       }
-
-//   }
-
-//   let updateInteractionData = async(LeadId,InteractionType,Notes) =>{
-//     try{
-//         console.log('data',LeadId,InteractionType,Notes)
-//         let data = await db.sequelize.query("exec updateInteraction @lead='"+LeadId+"',@type='"+InteractionType+"',@note='"+Notes+"'",{ 
-//           type: Sequelize.QueryTypes.RAW
-//           })
-//          console.log('log',data)
-//          return data
-    
-//       }catch(err){
-//           console.log("DB Error",err)
-//           return err
-//       }
-
-//   }
-
-//   let ActivityLog = async(LeadId,msg)=>{
-//     try{
-//       console.log('data',LeadId,msg)
-//       let data = await db.sequelize.query("exec insertLog @lead='"+LeadId+"',@inter = Null ,@Act='"+msg+"'",{ 
-//         type: Sequelize.QueryTypes.RAW
-//         })
-//        console.log('log',data)
-//        return data
-  
-//     }catch(err){
-//         console.log("DB Error",err)
-//         return err
-//     }
-//   }
-
-//   let getInteractionId = async()=>{
-//     try{
-//         let data = await db.sequelize.query("exec getInteractionId",{ 
-//           type: Sequelize.QueryTypes.RAW
-//           })
-//          console.log('log',data)
-//          return data[0]
-    
-//       }catch(err){
-//           console.log("DB Error",err)
-//           return err
-//       }
-//   }
-//   let InteractionLog = async(LeadId,InteractionId,logmsg)=>{
-//     try{
-//       console.log('data',LeadId,logmsg)
-//       let data = await db.sequelize.query("exec insertLog @lead='"+LeadId+"',@inter ='"+InteractionId+"',@Act='"+logmsg+"'",{ 
-//         type: Sequelize.QueryTypes.RAW
-//         })
-//        console.log('log',data)
-//        return data
-  
-//     }catch(err){
-//         console.log("DB Error",err)
-//         return err
-//     }
-//   }
 
   let SourceList = async(req,res) =>{
     try{
@@ -769,7 +524,6 @@ const AssignToUser = async(req,res) =>{
 
   let insertImportData = async (excelDataString,ip,loc) =>{
     try{
-       // console.log('data',leadId)
             let data = await db.sequelize.query("exec importleaddata @json='"+excelDataString+"',@ip = '"+ip+"',@loc='"+loc+"'",{ 
               type: Sequelize.QueryTypes.RAW
               })

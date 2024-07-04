@@ -414,19 +414,7 @@ let getSingleTicketDetail = async(id,userId) =>{
     return err.message
   }
 }
-// let getSingleTicket = async(id) =>{
-//   try{
-//     console.log('enter ticket detail')
-//     let data = await db.sequelize.query("Exec helpdesk.logdetails @tic = '"+id+"' ", {
-//       type: Sequelize.QueryTypes.RAW
-//      })
-//      console.log('data1',data[0])
-//      return data[0]
-//   }catch(err){
-//     console.log('DBError',err.message)
-//     return err.message
-//   }
-// }
+
 
 let attachmentDetail = async(id) =>{
   try{
@@ -453,18 +441,7 @@ let commentDetail = async(id) =>{
   }
 }
 
-// let getticketId = async(projectId) =>{
-//   try{
-//     let data = await db.sequelize.query("Exec helpdesk.newticketdid @prj = '" + projectId+"'", {
-//       type: Sequelize.QueryTypes.RAW
-//      })
-//      console.log('data',data)
-//      return data[0]
-//   }catch(err){
-//     console.log('Error',err)
-//     return err
-//   }
-// }
+
 
 let updateStatus = async(TicketId,StatusId,loginUser) =>{
   try{
@@ -480,19 +457,6 @@ let updateStatus = async(TicketId,StatusId,loginUser) =>{
 
 }
 
-// let ticketLog = async(ticketId,issue,status,msg,userId)=>{
-//   try{
-//     console.log('data',ticketId,issue,status,msg,userId)
-//     let data = await db.sequelize.query("exec helpdesk.ActivityLog @tic='"+ticketId+"',@iss = '"+issue+"', @stat = '"+status+"', @Act='"+msg+"',@create ='"+userId+"'",{ 
-//       type: Sequelize.QueryTypes.RAW
-//       })
-//      console.log('log',data)
-//      return data[0]  
-
-//   }catch(err){
-//     return err
-//   }
-// }
 let uploadfile = async(ticketId,input) =>{
   const { fileBlob, filename, loginUser } = input;
   //let TicketId = id
@@ -501,20 +465,20 @@ let uploadfile = async(ticketId,input) =>{
   const fileContents = Buffer.from(fileBlob, 'base64');
   let newPath = "public/"+filename;
 
-  fs.writeFile(newPath, fileContents, async (err) => {
-      if (err) {
+ fs.writeFile(newPath, fileContents, async (err) => {
+    if (err) {
       console.error('Error saving file:', err);
-      return err
-      } else {
+      return err;
+    } else {
       console.log('File saved successfully');
-      let data = await AttachFilePathinDB(ticketId, filename,newPath,loginUser)
-      console.log('data file',data)
+      let data = await AttachFilePathinDB(ticketId, filename, newPath, loginUser);
+      console.log('data file', data);
       //let msg = "File Uploaded Successfully"
-      return data[0]
+      return data[0];
       //statusCode.successResponseForCreation(res,msg)
       // res.status(200).json({ success: true });
-      }
-      //return true
+    }
+    //return true
   });
 
 }
@@ -562,18 +526,7 @@ let updateUser = async(TicketID,AssignTo,loginUser) =>{
   }
 
 }
-// let updatedUserName = async(userId) =>{
-//   try{
-//     let data = await db.sequelize.query("Exec helpdesk.updateUserName @usr = '"+userId+"'", {
-//       type: Sequelize.QueryTypes.RAW
-//      })
-//      return data[0]
-//   }catch(err){
-//     console.log('Error',err)
-//     return err
-//   }
 
-// }
 
 let exportExcel = async(req,res) =>{
   try{
@@ -650,16 +603,7 @@ console.log("expath",currentDate)
     statusCode.errorResponse(res,msg)
   }
 }
-// let getUserRole = async(userId)=>{
-//   try{ 
-//       let data = await db.sequelize.query("EXEC helpdesk.userroleid @usr = '"+userId+"' ",{
-//           type: Sequelize.QueryTypes.RAW})
-//           return data[0]
 
-//   }catch(err){
-//       return err
-//   }
-// }
 
 let EmailSend = async(sub,content,name,Email) =>{
   try{

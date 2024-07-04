@@ -73,19 +73,6 @@ let updateModule = async(req,res)=>{
     }
 }
 
-// let findModule = async(moduleName)=>{
-//     try{
-//         let data = await db.sequelize.query("Exec helpdesk.findModule @name = '" + moduleName + "'", {
-//             type: Sequelize.QueryTypes.RAW
-//         })
-//         console.log('data',data)
-//         return data[0]     
-//     }catch(err){
-//         return err
-//     }
-// }
-
-
 let UpdateNewModule = async(moduleId,moduleName,description,loginUser)=>{
     try{
         let data = await db.sequelize.query("Exec helpdesk.updateAdminModule @mid = '" + moduleId + "',@module = '" + moduleName + "',@desc = '" + description + "',@update = '"+loginUser+"' ", {
@@ -139,36 +126,7 @@ let createScreen = async(req,res)=>{
             let msg = data
             statusCode.successResponse(res,msg)
         }
-        //console.log('data',data.length)
-        // if(data.length>0){
-        //     let ScreenId = await getScreenId()
-        //    // console.log('ScreenId',ScreenId)
-        //     if(ScreenId.length>0){
-        //         let screenId = ScreenId[0].ScreenId
-        //         let mapData = await insertModuleScreenMap(moduleId,screenId,loginUser)
-        //         //console.log('mapdata',mapData)
-        //         if(mapData.length>0){
-        //             let msg = "Screen Created Successfully"
-        //             statusCode.successResponseForCreation(res,msg)
-        //         }else{
-        //             let msg = "Module and Screen Mapping Failed"
-        //             statusCode.successResponse(res,msg)
-        //         }
-                
-        //     }else{
-        //         let msg = "Screen Creation Failed"
-        //         statusCode.successResponse(res,msg)
-        //     }
-            
-        // }else{
-        //     let msg = 'Screen creation Failed'
-        //     statusCode.successResponse(res,msg)
-        // }
-        // }else{
-        //     let msg = 'ScreenName Alredy Exist.'
-        //     statusCode.successResponse(res,msg)        
-        // }  
-
+       
     }catch(err){
         console.log("Error",err)
         let msg = `Failed to Mapping a Module and Screen.${err}`
@@ -176,17 +134,6 @@ let createScreen = async(req,res)=>{
     }
 }
 
-// let  screen = async (screenName) =>{
-//     try{
-//         let data = await db.sequelize.query("Exec helpdesk.findScreenName @screen = '" + screenName + "' ", {
-//             type: Sequelize.QueryTypes.RAW
-//         })
-//         console.log('data',data)
-//         return data[0]    
-//     }catch(err){
-//         return err
-//     }
-// }
 
 let getScreenList = async(req,res)=>{
     try{
@@ -280,40 +227,6 @@ let updateScreenName = async(ScreenId,ScreenName,Description,loginUser)=>{
         return err.message
     }
 }
-
-// let getScreenId = async()=>{
-//     try{
-//         let data = await db.sequelize.query("Exec helpdesk.ScreenId ", {
-//             type: Sequelize.QueryTypes.RAW
-//         })
-//         console.log('data',data)
-//         return data[0]      
-//     }catch(err){
-//         return err
-//     }
-// }
-// let insertModuleScreenMap = async(moduleId,screenId,loginUser)=>{
-//     try{
-//         let data = await db.sequelize.query("Exec helpdesk.insertModuleScreen @mid = '" + moduleId + "',@sid = '" + screenId + "',@create = '"+loginUser+"' ", {
-//             type: Sequelize.QueryTypes.RAW
-//         })
-//         console.log('data',data)
-//         return data      
-//     }catch(err){
-//         return err
-//     }
-// }
-// let updatetModuleScreenMap = async(moduleId,screenId)=>{
-//     try{
-//         let data = await db.sequelize.query("Exec helpdesk.updateModuleScreen @mid = '" + moduleId + "',@sid = '" + screenId + "' ", {
-//             type: Sequelize.QueryTypes.RAW
-//         })
-//         console.log('data',data)
-//         return data      
-//     }catch(err){
-//         return err
-//     }
-// }
 
 let getScreens = async()=>{
     try{
@@ -464,10 +377,11 @@ let exportExcel = async(req,res) =>{
 
   let dasboard = async(req,res) =>{
     try{
-        let data = await dasboardDetails()
+        let projectId = req.body.ProjectID
+        let data = await dasboardDetails(projectId)
         if(Array.isArray(data)){
             console.log('data',data)
-            let countData = await ticketCount()
+            let countData = await ticketCount(projectId)
             if(Array.isArray(countData)){
                 let msg = 'Dashboard Details'
                 let output ={
@@ -491,9 +405,9 @@ let exportExcel = async(req,res) =>{
   }
 
 
-  let dasboardDetails = async() =>{
+  let dasboardDetails = async(projectId) =>{
     try{
-        let data = await db.sequelize.query("Exec helpdesk.GenerateDashboardData ", {
+        let data = await db.sequelize.query("Exec helpdesk.GenerateDashboardData @prj = '"+projectId+"' ", {
             type: Sequelize.QueryTypes.RAW
         })
         console.log('data',data)
@@ -504,9 +418,9 @@ let exportExcel = async(req,res) =>{
     }
   }
 
-  let ticketCount = async() =>{
+  let ticketCount = async(projectId) =>{
     try{
-        let data = await db.sequelize.query("Exec helpdesk.GetTicketCount ", {
+        let data = await db.sequelize.query("Exec helpdesk.GetTicketCount @prj = '"+projectId+"'", {
             type: Sequelize.QueryTypes.RAW
         })
         console.log('data',data)

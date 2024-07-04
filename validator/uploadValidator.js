@@ -4,7 +4,7 @@ const upload = joi.object({
   filename: joi.string().required(),
   fileBlob: joi.string().required(), // Allow empty string or null for fileBlob
   loginUser: joi.number().integer().required(),
-  TicketID: joi.number().integer().required()
+  TicketID: joi.string().required()
 });
 
 const uploadValidation = (req, res, next) => {

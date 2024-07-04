@@ -20,24 +20,13 @@ let uploadfile = async(req,res) =>{
         } else {
           console.log('File saved successfully');
           let datas = await AttachFilePathinDB(loginUser, TicketID,newPath, filename)
-          console.log('datas',datas)
-          let data = await getSingleTicket(TicketID)
-          console.log('data',data)
-          if(data.length>0){
-            let issue = data[0].issueTypeId
-            let status = data[0].StatusID
-            let userId = req.body.loginUser
-            console.log(issue,status)
-            let msg = "File Uploaded Successfully"
-        
-            await ticketLog(TicketID,issue,status,msg,userId)
-
+          if(Array.isArray(datas)){
+            let msg =`File Uploaded Successfully`
             statusCode.successResponseForCreation(res,msg)
-        }else{
-          let msg = 'Ticket details are not available for this ticket'
-          statusCode.successResponse(res,msg)
-        }
-
+          }else{
+            let msg = `Failed to upload a File.${datas}`
+            statusCode.errorResponse(res,msg)
+          }    
         }
     });
 

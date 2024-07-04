@@ -16,8 +16,7 @@ const successResponse = (res, msg) => {
   const successResponseForCreation = (res, msg) => {
     const datas = {
       status: 201,
-      message: msg || '',
-      
+      message: msg || '',      
     }
     res.status(201).json(datas)
   }

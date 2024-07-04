@@ -172,18 +172,7 @@ let createProjects = async(req,res) =>{
   }
 }
 
-// let findProject = async(projectKey)=>{
-//   try{
-//     let data = await db.sequelize.query("Exec helpdesk.findProjects @key = '"+ projectKey +"' ", {
-//       type: Sequelize.QueryTypes.RAW
-//      })
-//      console.log('find user data',data)
-//      return data[0]
-//   }catch(err){
-//     console.log("Error",err)
-//     return err
-//   }
-// }
+
 
 let createNewProject = async(projectKey,projectName,description,status,loginUser) =>{
   try{
@@ -269,16 +258,7 @@ let userProjectMap = async(userId,projectId,loginUser) =>{
   }
  }
 
-//  let getUserRole = async(userId)=>{
-//   try{ 
-//       let data = await db.sequelize.query("EXEC helpdesk.userroleid @usr = '"+userId+"' ",{
-//           type: Sequelize.QueryTypes.RAW})
-//           return data[0]
 
-//   }catch(err){
-//       return err
-//   }
-// }
 
  let userProjects = async(userId) =>{
   try{

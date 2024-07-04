@@ -68,23 +68,4 @@ let getPriorityTypes = async()=>{
         return err
     }
 }
-
-// let getStatuses = async()=>{
-//     try{
-//         let data = await db.sequelize.query('EXEC helpdesk.StatusesList',{
-//             type: Sequelize.QueryTypes.RAW 
-//         })
-//         console.log('data',data)
-//         return data[0]
-//     }
-//     catch(err){
-//         console.log('Error',err)
-//         return err
-//     }
-// }
-
-
-
-
-
 module.exports = {getModuleDetail}
