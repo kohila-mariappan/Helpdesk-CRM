@@ -47,36 +47,7 @@ let AttachFilePathinDB = async(uploader, ticketId, newPath, filename) =>{
 
 }
 
-let getSingleTicket = async(id) =>{
-    try{
-      console.log('enter ticket detail')
-      let data = await db.sequelize.query("Exec helpdesk.logdetails @tic = '"+id+"' ", {
-        type: Sequelize.QueryTypes.RAW
-       })
-       console.log('data1',data[0])
-       return data[0]
-    }catch(err){
-      console.log('Error',err.message)
-      return err.message
-    }
-  }
 
-  let ticketLog = async(ticketId,issue,status,msg,userId)=>{
-    try{
-      console.log('data',ticketId,issue,status,msg,userId)
-      let data = await db.sequelize.query("exec helpdesk.ActivityLog @tic='"+ticketId+"',@iss = '"+issue+"', @stat = '"+status+"', @Act='"+msg+"',@create ='"+userId+"'",{ 
-        type: Sequelize.QueryTypes.RAW
-        })
-       console.log('log',data)
-       return data[0]  
-  
-    }catch(err){
-      console.log('err',err.message)
-      return err.message
-    }
-  }
-
- 
 
 let attachList = async(req,res) =>{
     try{
