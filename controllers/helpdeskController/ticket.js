@@ -387,8 +387,8 @@ let ticketList = async(id) =>{
     console.log('DBError',err.message)
     return err.message
   }
+ 
 }
-
 
 let getStatusDetails = async(id) =>{
   try{
@@ -527,7 +527,6 @@ let updateUser = async(TicketID,AssignTo,loginUser) =>{
 
 }
 
-
 let exportExcel = async(req,res) =>{
   try{
     let id = req.body.ProjectID
@@ -636,9 +635,133 @@ let EmailSend = async(sub,content,name,Email) =>{
   }
 }
 
+const ReportData = async(req,res) =>{
+  try{
+    const inputData = req.body
+    console.log('inputData',inputData)
+    let data = await reportdata(inputData)
+    if(Array.isArray(data)){
+      console.log('reportData',data)
+      let msg = `Report Data`
+      statusCode.successResponseWithData(res,msg,data)
+    }else{
+      let msg = `Failed to get Report Data.${data}`
+      statusCode.successResponse(res,msg)
+    }
+  }catch(err){
+    console.log(`Error.${err}`)
+    let msg = `Failed to get Report Data.${err}`
+    statusCode.errorResponse(res,msg)
+  }
+}
+
+const exportReportData = async(req,res) =>{
+  try{
+    const inputData = req.body
+    console.log('inputData',inputData)
+    let reportData = await reportdata(inputData)
+    const workbook = new excelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Report");
+    let path = "public/"
+    worksheet.columns = [
+      { header: "S no.", key: "s_no", width: 10 }, 
+      { header: "TicketId", key: "tic", width: 15 },
+      {header: "ProjectName", key:"prj", width: 25},
+      { header: "Summary", key: "sum", width: 50 },
+      { header: "IssueType", key: "iss", width: 15 },
+      { header: "StatusName", key: "stat", width: 15 },
+      { header: "PriorityLevel", key: "prio", width: 15 },
+      { header: "Username", key: "user", width: 15 },
+      { header: "TicketCreatedBy", key: "create", width: 20 },
+      { header: "TicketCreatedDate", key: "cdate", width: 20 },
+      { header: "TicketLastUpdatedAt", key: "Mdate", width: 20}
+
+  ];
+  // Looping through User data
+let counter = 1;
+reportData.forEach((data) => {
+  console.log('reportData',data,data.TicketId)
+  data.s_no = counter;
+  data.tic = data.TicketId
+  data.prj= data.ProjectName
+  data.sum = data.Summary
+  data.iss= data.IssueType
+  data.stat= data.StatusName
+  data.prio = data.priorityLevel
+  data.user = data.Username
+  data.create = data.ticketcreatedby
+  data.cdate = data.CreatedDate
+  data.Mdate = data.TicketLastUpdatedAt
+  console.log('sheeetdata',worksheet.addRow(data)); // Add data in worksheet
+  counter++;
+});
+
+// Making first line in excel bold
+worksheet.getRow(1).eachCell((cell) => {
+  cell.font = { bold: true };
+});
+
+let date = new Date()
+let currentDate = date.getTime()
+console.log('date',currentDate)
+try {
+console.log("expath",currentDate)
+  await workbook.xlsx.writeFile(`${path}${currentDate}.xlsx`)
+   .then(() => {
+     res.send({
+       status: "success",
+       message: "file successfully downloaded",
+       path: `${path}${currentDate}.xlsx`
+      });
+   });
+   fs.unlink(path, (err) => {
+    if (err) {
+      console.error('Error deleting temporary file:', err);
+    } else {
+      console.log('Data uploaded and temporary file deleted successfully!');
+    }
+  });
+} catch (err) {
+    res.send({
+    status: "error",
+    message: `Something went wrong.${err}`,
+  });
+  }
+
+  }catch(err){
+    console.log('Error',err)
+    let msg = `Failed to export data.${err}`
+    statusCode.errorResponse(res,msg)
+  }
+}
+
+const reportdata = async(inputData) =>{
+  try{
+    console.log(inputData)
+    const stringData = JSON.stringify(inputData)
+    let data = await db.sequelize.query("Exec helpdesk.Helpdeskdynamicreport @json = '" + stringData+"' ", {
+      type: Sequelize.QueryTypes.RAW
+     })
+     console.log('dataupdate',data)
+     return data[0]
+  }catch(err){
+    console.log('DBError',err)
+    return err
+  }
+}
 
 
 
 
 
-module.exports = {saveTicket,getTicket,getTicketList,statusUpdate,userUpdated,exportExcel}
+
+module.exports = {
+  saveTicket,
+  getTicket,
+  getTicketList,
+  statusUpdate,
+  userUpdated,
+  exportExcel,
+  ReportData,
+  exportReportData
+}
